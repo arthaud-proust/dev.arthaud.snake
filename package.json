@@ -1,0 +1,17 @@
+{
+  "name": "webcam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js",
+    "start": "node app.js"
+  },
+  "author": "arthaud-proust",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "get-canvas-pixel-color": "^2.0.1",
+    "socket.io": "^3.0.3"
+  }
+}

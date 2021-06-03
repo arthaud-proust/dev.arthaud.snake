@@ -17,12 +17,15 @@ body {
     justify-content: center;
 }
 
-h1, b, #infoArrow{
+h1, b, #infoArrow, #infoSnake{
     color: #fff;
     mix-blend-mode: difference;
 }
 
 #infoArrow{
+    margin-bottom: 3px;
+}
+#infoSnake{
     margin-bottom: 10px;
 }
 
@@ -38,4 +41,39 @@ h1, b, #infoArrow{
 
 #touch {
     display: none;
+}
+
+#play {
+    background: none;
+    font-size: 1.3rem;
+    border: 1px solid #eee;
+    padding: 10px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #eee;
+    transition: .2s;
+    position: relative;
+}
+#play::before {
+    position: absolute;
+    content: ' ';
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    transition: .2s;
+    background: #eee;
+    z-index: -1;
+}
+#play:hover {
+    --to: 10px;
+    padding: calc(10px - var(--to)) calc(15px - var(--to));
+    border: calc(var(--to) + 1px) solid #eee;
+    color: #222;
+    text-decoration: none;
+}
+#play:hover::before {
+    width: 102%;
+    height: 102%;
 }

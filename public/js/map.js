@@ -133,10 +133,13 @@ socket.on('user', newUser=>{
 
 
     socket.on('kill', user=>{
-        if(user == window.user._id) window.location.reload()
+        // if(user == window.user._id) window.location.reload()
         map.clear()
     })
 
+    socket.on('afk', user=>{
+        if(user == window.user._id) window.location.href = '/';
+    })
 
     socket.on('itemSpawn', item=>{
         map.items.push(item)

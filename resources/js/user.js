@@ -8,19 +8,8 @@ module.exports = class User {
         this.map = this.manager.map;
         this._id = u.randomId();
         this._color = u.randomColor();
-        this._queue = [
-            [
-                this.manager.randomX(),
-                this.manager.randomY()
-            ],
-        ];
-        this._state = {
-            grow:10,
-            dead: false
-        };
 
-        
-        this._direction = "none";
+        this.spawn();
         this._directions = {
             "none": [0,0, 'x',0,"empty"],
             "left": [-1,0,'x',0, "right"],
@@ -43,6 +32,10 @@ module.exports = class User {
         return this._directions[this._direction];
     }
 
+    get fromDirectionData() {
+        return this._directions[this._from];
+    }
+
     get head() {return {
         x: this._queue[this.length-1][0],
         y: this._queue[this.length-1][1],
@@ -60,9 +53,30 @@ module.exports = class User {
         }
     }
 
+    spawn() {
+        this._queue = [
+            [
+                this.manager.randomX(),
+                this.manager.randomY()
+            ],
+        ];
+        this._state = {
+            grow:10,
+            born: true,
+            dead: false,
+            afk: false,
+            afkTurns:0,
+            innocent: true,
+            innocentTurns: 10,
+        };
+        this._direction = "none";
+        this._from = "none";
+    }
+
     changeDirection(direction) {
-        if(this.directionData[4] == direction) return
+        if(this.fromDirectionData[4] == direction ) return
         this._direction = direction;
+        this._state.born = true;
     }
 
     headOn(list, item=false) {
@@ -70,7 +84,12 @@ module.exports = class User {
     }
 
     move() {
-        if(this.direction=="none") return []
+        if(this.direction=="none") {
+            if(++this._state.afkTurns == 100) {
+                this._state.afk=true;
+            }
+            return []
+        }
 
         if(this.head[this.directionData[2]] == this.directionData[3] || this.headOn("usersMap")) {
             this._state.dead = true;
@@ -81,13 +100,12 @@ module.exports = class User {
             this._state.grow--
         } else {
             this._queue.shift();
-
         }
 
         const item = this.headOn("itemsMap", true)
         if(item) {
             if(item[2]=="apple") {
-                this._state.grow+=2;
+                this._state.grow+=3;
                 console.log(this.id+' eat an apple');
             }
         }
@@ -97,6 +115,9 @@ module.exports = class User {
             this.head.y + this.directionData[1]*this.height
         ])
 
+        this._from = this.direction;
+
         return this.queue.slice(0, this.length-1) // return queue without head
     }
+
 }

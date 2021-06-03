@@ -70,3 +70,12 @@ h1 {
 #touch #right, #touch #down {
     margin-left: 21vw;
 }
+
+#play {
+    font-size: 1.3rem;
+    border: 1px solid #eee;
+    padding: 10px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #eee;
+}

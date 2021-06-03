@@ -10,6 +10,10 @@ module.exports = function(router) {
     });
 
     router.get('/', function(req, res) {
+        res.sendFile(path.join(__dirname, '/../views/home.html'));
+    });
+
+    router.get('/play', function(req, res) {
         res.sendFile(path.join(__dirname, '/../views/map.html'));
     });
 

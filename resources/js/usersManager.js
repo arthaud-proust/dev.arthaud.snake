@@ -7,6 +7,8 @@ module.exports = class UserManager {
         this._items = ['apple'];
 
         this._itemsMap = [];
+        this._itemsInc = 0;
+
         this._usersMap = [];
         this._newUsersMap = [];
         this._users = {};
@@ -48,15 +50,21 @@ module.exports = class UserManager {
     interval(interval) {
         if(this._interval) clearInterval(this._interval);
 
+
         this._interval = setInterval(()=>{
 
             this.randomAddApple()
 
+
             this.io.sockets.emit('moves', Object.values(this.users).map(user=>{
-                if(user.state.dead) {
+                if(user.state.afk) {
+                    this.io.sockets.emit('afk', user.id);
+                    delete this.users[user.id]
+                } else if(user.state.dead) {
                     console.log(user.id+' is dead');
                     this.io.sockets.emit('kill', user.id);
-                    delete this.users[user.id]
+                    // delete this.users[user.id]
+                    user.spawn();
                 } else {
                     // console.log(user.id + ' deplaced');
                     this._newUsersMap = [...this._newUsersMap, ...user.move()]
@@ -71,8 +79,9 @@ module.exports = class UserManager {
     }
 
     randomAddApple() {
-        if(this._itemsMap.length>=8) return
-        if(Math.floor(Math.random()*15) == 1) {
+        if(this._itemsMap.length>=Object.keys(this.users).length*2) return
+        if(++this._itemsInc>20) {
+            this._itemsInc = 0;
             let item = [
                 this.randomX(),
                 this.randomY(),

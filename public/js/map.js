@@ -4,6 +4,7 @@ function rgbToHex(r, g, b) {
     return ((r << 16) | (g << 8) | b).toString(16);
 }
 
+window.pause = false;
 class User {
     constructor(user) {
         this._id = user.id;
@@ -84,17 +85,51 @@ class Map {
             }
 
 
-            let line = {
+            let lineBase = {
                 strokeStyle: users[i].color,
                 strokeWidth: users[i].height,
                 rounded: true
             };
-            for (let p = 0; p < users[i].queue.length; p++) {
-                line['x'+(p+1)] = users[i].height/2 + users[i].queue[p][0];
-                line['y'+(p+1)] = users[i].width/2 + users[i].queue[p][1];
-            }
 
-            $('canvas').drawLine(line);
+            // lignes à dessiner dans le cas où le snake traverse les bordures
+            var queue = users[i].queue;
+            var lines = [], actLine = [];
+
+
+            
+            for(let j=0; j<queue.length; j++) {
+                
+                if( // distance plus large entre les points
+                    j<queue.length-1 &&
+                    (Math.abs(queue[j][0] - queue[j+1][0]) > users[i].height
+                    ||
+                    Math.abs(queue[j][1] - queue[j+1][1]) > users[i].width)
+                ) { //on crée une nouvelle ligne
+                    actLine.push(queue[j]);
+                    lines.push(actLine);
+                    // actLine=[coords[j]];
+                    actLine=[];
+                } else { // sinon on ajoute les coords à la ligne actuelle
+                    actLine.push(queue[j]);
+                }
+            }
+            lines.push(actLine);
+
+            
+            // console.log(lines);
+            lines.forEach(lineCoords=>{
+                let line = {...lineBase}; // copie sans ref de lineBase
+                for(let j=1; j<lineCoords.length+1;j++) {
+                    line['x'+j] = lineCoords[j-1][0] + users[i].height/2;
+                    line['y'+j] = lineCoords[j-1][1] + users[i].width/2;
+                }
+                // console.log(line);
+                if(!line.y2) {
+                    line.x2 = line.x1;
+                    line.y2 = line.y1;
+                }
+                $('canvas').drawLine(line);
+            })
         }
     }
 
@@ -120,15 +155,18 @@ socket.on('user', newUser=>{
     window.user = new User(newUser);
     map.clear()
 
-    console.log('Joined.', 'Color:', user.color);
 
     document.body.style.background = user.color;
+    map.items = newUser.itemsMap;
     map.place([window.user.json])
 
+    console.log(user);
 
     
     socket.on('moves', users=>{
-        map.place(users)
+        if(!window.pause) {
+            map.place(users)
+        }
     })
 
 
@@ -165,6 +203,9 @@ socket.on('user', newUser=>{
         if(directions.includes(direction)) {
             window.user.move(direction);
         }
+        // if(e.key==" ") {
+        //     window.pause=!window.pause;
+        // }
     })
 
 

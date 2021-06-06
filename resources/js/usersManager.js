@@ -13,6 +13,24 @@ module.exports = class UserManager {
         this._newUsersMap = [];
         this._users = {};
 
+        this._colors = [
+            '#2f4f4f',
+            '#8b4513',
+            '#006400',
+            '#4b0082',
+            '#ff0000',
+            '#ffa500',
+            '#ffff00',
+            '#00ff00',
+            '#00ffff',
+            '#0000ff',
+            '#ff00ff',
+            '#1e90ff',
+            '#98fb98',
+            '#ff69b4',
+            '#ffefd5'
+        ];
+
         this.user = {
             height: 10,
             width: 10
@@ -36,7 +54,9 @@ module.exports = class UserManager {
 
     headOn(head, list, item=false) {
         for(let i = 0; i<this[list].length;i++) {
-            if(this[list][i][0] == head.x && this[list][i][1] == head.y) {
+            if(this[list][i][0] == head.x && this[list][i][1] == head.y // point commun avec un élément de la liste
+                && this[list][i][2] // si l'élément subit les collisions
+                ) {
                 if(item) {
                     this[list].splice(i,1); // if don't wrk 
                     this.io.emit('itemDespawn', this[list])
@@ -80,7 +100,7 @@ module.exports = class UserManager {
 
     randomAddApple() {
         if(this._itemsMap.length>=Object.keys(this.users).length*2) return
-        if(++this._itemsInc>20) {
+        if(++this._itemsInc>(17-Object.keys(this.users).length)) {
             this._itemsInc = 0;
             let item = [
                 this.randomX(),
@@ -89,7 +109,7 @@ module.exports = class UserManager {
             ]
             console.log('apple spawned');
             this._itemsMap.push(item);
-            this.io.emit('itemSpawn', item)
+            this.io.sockets.emit('itemSpawn', item)
         }
     }
 

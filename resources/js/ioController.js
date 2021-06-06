@@ -4,7 +4,8 @@ const UsersManager = require('./usersManager');
 module.exports = function(io) {
     const users = new UsersManager(io);
 
-    users.interval(100);
+    users.interval(120);
+    // users.interval(200);
 
     io.sockets.on("connection", socket => {
 
@@ -36,7 +37,8 @@ module.exports = function(io) {
     socket.on('leave', function (user) {
         console.log(user.id +' left');
         users.getUser(user.id).then(resultUser=>{
-            resultUser._state.dead = true;
+            resultUser.manager._colors.push(resultUser._color);
+            resultUser._state.afk = true;
         }).catch(e=>{})
     });
 

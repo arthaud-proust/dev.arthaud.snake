@@ -6,6 +6,7 @@ const server = http.createServer(app);
 const io = require("socket.io")(server);
 const router = express.Router()
 const PORT = process.env.PORT || 8000;
+const HOST = process.env.HOST || 'localhost';
 
 //add the router folders
 app.use(express.static(__dirname + '/public'));             // Store all assets, js and css files in public folder.
@@ -20,4 +21,4 @@ require('./resources/js/ioController')(io);
 io.sockets.on("error", e => console.log(e));
 
 
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+server.listen(PORT, HOST, () => console.log(`Server is running on port ${PORT}`));

@@ -7,11 +7,15 @@ module.exports = class User {
         this.width = this.manager.user.width;
         this.map = this.manager.map;
         this._id = u.randomId();
-        this._color = u.randomColor();
+        this._color = this.manager._colors.shift();
+        // this._color = u.randomColor();
+
+        this.KICK_AFTER = 999999;
+        // this.KICK_AFTER = 100;
 
         this.spawn();
         this._directions = {
-            "none": [0,0, 'x',0,"empty"],
+            "none": [0,0, 'x',0,"empty", 0],
             "left": [-1,0,'x',0, "right"],
             "up": [0,-1,'y',0, "down"],
             "right": [1,0,'x',this.map.width/2-this.width, "left"],
@@ -46,10 +50,11 @@ module.exports = class User {
             id: this._id,
             color: this._color,
             map: this.map,
+            itemsMap: this.manager.itemsMap,
             queue: this._queue,
             direction: this._direction,
             height: this.height,
-            width: this.width
+            width: this.width,
         }
     }
 
@@ -85,13 +90,23 @@ module.exports = class User {
 
     move() {
         if(this.direction=="none") {
-            if(++this._state.afkTurns == 100) {
+            if(++this._state.afkTurns >= this.KICK_AFTER) {
                 this._state.afk=true;
             }
             return []
         }
 
-        if(this.head[this.directionData[2]] == this.directionData[3] || this.headOn("usersMap")) {
+        if(this._state.innocentTurns > 0) {
+            this._state.innocentTurns--;
+        } else {
+            this._state.innocent = false;
+        }
+
+        // si touche bordure, ou un autre joueur est qu'il n'est pas innocent
+        if(
+            // this.head[this.directionData[2]] == this.directionData[3] ||
+            (this.headOn("usersMap") && !this._state.innocent)// usersMap contient toutes les coordonnées occupées par les joueurs
+            ) { 
             this._state.dead = true;
             return []
         }
@@ -112,8 +127,23 @@ module.exports = class User {
 
         this._queue.push([
             this.head.x + this.directionData[0]*this.width,
-            this.head.y + this.directionData[1]*this.height
+            this.head.y + this.directionData[1]*this.height,
+            !this._state.innocent //  innocent = intouchable
         ])
+
+        // si traverse le mur
+        if(this.directionData[2] == 'x') {
+            if(this.head[this.directionData[2]] == this.directionData[3] + this.directionData[0]*this.width) {
+                // this._queue[this.length-1][0] -= this.directionData[0] * (this.map.width/2+this.width);
+                this._queue[this.length-1][0] -= this.directionData[0] * (this.map.width/2);
+            }
+        } else {
+            if(this.head[this.directionData[2]] == this.directionData[3] + this.directionData[1]*this.height) {
+                // this._queue[this.length-1][1] -= this.directionData[1] * (this.map.height/2+this.height);
+                this._queue[this.length-1][1] -= this.directionData[1] * (this.map.height/2);
+            }
+        }
+
 
         this._from = this.direction;
 

@@ -10,8 +10,8 @@ module.exports = class User {
         this._color = this.manager._colors.shift();
         // this._color = u.randomColor();
 
-        this.KICK_AFTER = 999999;
-        // this.KICK_AFTER = 100;
+        // this.KICK_AFTER = 999999;
+        this.KICK_AFTER = 100;
 
         this.spawn();
         this._directions = {

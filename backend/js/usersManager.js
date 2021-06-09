@@ -4,6 +4,18 @@ module.exports = class UserManager {
     constructor(io) {
         this.io = io;
 
+        this.cubeSize = 10;
+        this.size = 500;
+        this.cubes = [];
+
+        for(let i =0; i<500; i++) {
+            this.cubes.push([
+                Math.round(Math.random() * (this.size/this.cubeSize-1) ) * this.cubeSize,
+                0,
+                Math.round(Math.random() * (this.size/this.cubeSize-1) ) * this.cubeSize 
+            ])
+        }
+
         this._items = ['apple'];
 
         this._itemsMap = [];
@@ -14,30 +26,25 @@ module.exports = class UserManager {
         this._users = {};
 
         this._colors = [
-            '#2f4f4f',
-            '#8b4513',
+            '#000000',
             '#006400',
-            '#4b0082',
             '#ff0000',
-            '#ffa500',
-            '#ffff00',
+            '#0000cd',
             '#00ff00',
+            '#e9967a',
             '#00ffff',
-            '#0000ff',
-            '#ff00ff',
-            '#1e90ff',
-            '#98fb98',
-            '#ff69b4',
-            '#ffefd5'
+            '#ffff54',
+            '#6495ed',
+            '#ff1493'
         ];
 
         this.user = {
-            height: 10,
-            width: 10
+            height: this.cubeSize,
+            width: this.cubeSize
         }
         this.map = {
-            height: 700,
-            width: 700
+            height: this.size*2,
+            width: this.size*2
         }
     }
 

@@ -10,13 +10,13 @@ const HOST = process.env.HOST || 'localhost';
 
 //add the router folders
 app.use(express.static(__dirname + '/public'));             // Store all assets, js and css files in public folder.
-app.use(express.static(__dirname + '/resources/views'));    // Store all HTML files in view folder.
+app.use(express.static(__dirname + '/backend/views'));    // Store all HTML files in view folder.
 
 app.use('/', router);       // add the router
 
 //routes and ioController
-require('./resources/js/routes')(router);          
-require('./resources/js/ioController')(io);
+require('./backend/js/routes')(router);          
+require('./backend/js/ioController')(io);
 // });
 io.sockets.on("error", e => console.log(e));
 

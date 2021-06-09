@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap');
+body {
+    margin:0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    color: #ddd;
+    background: #121215;
+
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+h1 {
+    margin: 10px 0;
+    font-size: 1.5rem;
+}
+#infoArrow{
+    display: none;
+}
+
+#map {
+    margin-top: 10px;
+    border: 4px solid #fff;
+    border-radius: 13px;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    -ms-border-radius: 13px;
+    -o-border-radius: 13px;
+}
+
+
+#touch {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 60vw;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+}
+
+#touch img {
+    display: block;
+    height: 18vw;
+    width: 18vw;
+    margin: 1vw;
+    background: hsla(0, 0%, 93%, 0.514);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+#touch #up {
+    margin: 0 21vw;
+}
+#touch #right, #touch #down {
+    margin-left: 21vw;
+}
+
+#play {
+    font-size: 1.3rem;
+    border: 1px solid #eee;
+    padding: 10px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #eee;
+}

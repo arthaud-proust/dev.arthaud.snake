@@ -10,12 +10,17 @@ module.exports = function(io) {
     io.sockets.on("connection", socket => {
 
     socket.on('join', function () {
-        console.log(`A player joined the game`);
-
-        let userJson = users.addUser();
-
-        socket.emit('user', userJson);
-    });
+    
+            // let userJson = users.addUser();
+    
+            users.addUser().then(userJson=>{
+                console.log(`A player joined the game`);
+                socket.emit('user', userJson);
+            }).catch(e=>{
+                console.log(e);
+                socket.emit('redirect', '/full');
+            });
+        });
 
     socket.on('move', function (user) {
         console.log(user.id +' moved '+user.direction);

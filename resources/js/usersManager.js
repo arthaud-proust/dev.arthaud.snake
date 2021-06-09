@@ -114,10 +114,22 @@ module.exports = class UserManager {
     }
 
     addUser() {
-        let user = new User(this);
-        this._users[user.id] = user;
+        return new Promise((resolve, reject)=>{
+            if(this._colors.length==0) {
+                reject({
+                    type:'error',
+                    content: 'Le serveur est plein'
+                })
+            } else {
+                let user = new User(this);
+                this._users[user.id] = user;
+        
+                console.log(Object.keys(this._users));
+                resolve(user.json);
+            }
 
-        return user.json;
+        })
+
     }
 
     getUser(id) {

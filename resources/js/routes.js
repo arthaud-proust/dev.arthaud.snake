@@ -13,8 +13,16 @@ module.exports = function(router) {
         res.sendFile(path.join(__dirname, '/../views/home.html'));
     });
 
-    router.get('/play', function(req, res) {
-        res.sendFile(path.join(__dirname, '/../views/map.html'));
+    router.get('/ingame', function(req, res) {
+        res.sendFile(path.join(__dirname, '/../views/game.html'));
     });
 
+    router.get('/full', function(req, res) {
+        res.sendFile(path.join(__dirname, '/../views/full.html'));
+    });
+
+
+    router.get('/*', function(req, res) {
+        res.sendFile(path.join(__dirname, '/../views/404.html'));
+    });
 };

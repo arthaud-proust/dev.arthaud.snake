@@ -4,6 +4,15 @@ function rgbToHex(r, g, b) {
     return ((r << 16) | (g << 8) | b).toString(16);
 }
 
+function popup(msg) {
+    console.log('esddqsd');
+    let popBase = document.createElement('div');
+    popBase.dataset.type = msg.type;
+    popBase.classList.add('popup');
+    popBase.innerText = msg.content;
+    document.body.appendChild(popBase);
+}
+
 window.pause = false;
 class User {
     constructor(user) {
@@ -150,6 +159,14 @@ class Map {
 // Join
 socket.emit('join');
 
+    socket.on('redirect', loc=>{
+        document.location.href = loc;
+    })
+    socket.on('info', msg=>{
+        console.log('sqd');
+        // popup(msg)
+    });
+
 socket.on('user', newUser=>{
     window.map = new Map('body', newUser.map.height, newUser.map.width)
     window.user = new User(newUser);
@@ -169,8 +186,15 @@ socket.on('user', newUser=>{
         }
     })
 
+    // socket.on('redirect', loc=>{
+    //     document.location.href = loc;
+    // })
+    // socket.on('info', msg=>{
+    //     console.log('sqd');
+    //     // popup(msg)
+    // });
 
-    socket.on('kill', user=>{
+    socket.on('kill', ()=>{
         // if(user == window.user._id) window.location.reload()
         map.clear()
     })

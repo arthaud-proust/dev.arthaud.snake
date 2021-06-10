@@ -21,7 +21,7 @@ module.exports = function(io) {
         });
 
         socket.on('user.move', function (data) {
-            console.log(data.user +' moved '+data.direction);
+            // console.log(data.user +' moved '+data.direction);
 
             users.getUser(data.user).then(resultUser=>{
                 resultUser.changeDirection(data.direction);

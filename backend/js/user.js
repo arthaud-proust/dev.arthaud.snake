@@ -1,4 +1,5 @@
 const u = require('./utils');
+const uuid = require('uuid');
 
 module.exports = class User {
     constructor(manager) {
@@ -6,7 +7,7 @@ module.exports = class User {
         this.height = this.manager.user.height;
         this.width = this.manager.user.width;
         this.map = this.manager.map;
-        this._id = u.randomId();
+        this._id = uuid.v1();
         this._color = this.manager._colors.shift();
         // this._color = u.randomColor();
 

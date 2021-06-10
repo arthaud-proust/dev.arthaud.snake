@@ -1,4 +1,5 @@
 const THREE = require('three');
+const OBJLoader = require('three/examples/jsm/loaders/OBJLoader.js').OBJLoader;
 
 module.exports = class {
     constructor(scene, size=500) {
@@ -45,6 +46,34 @@ module.exports = class {
         this.obj.ground.geometry.translate( this.size/2, -5,this.size/2);
         this.obj.ground.receiveShadow = true;
         this.scene.add( this.obj.ground );
+    }
+
+    addApple(uuid, coords) {
+        const loader = new OBJLoader();
+
+        loader.load( './assets/apple_obj/apple.obj', ( obj )=>{
+    
+            const textureLoader = new THREE.TextureLoader();
+            this.scene.add( obj );
+            let mesh = obj.children[ 0 ];
+            mesh.material = new THREE.MeshPhongMaterial( {
+                // specular: 0x111111,
+                map: textureLoader.load( './assets/apple_obj/apple_color.jpg' ),
+                specularMap: textureLoader.load( './assets/apple_obj/apple_specular_map.jpg' ),
+                // normalMap: textureLoader.load( './assets/apple_obj/apple_specular_map.jpg' ),
+                // shininess: 25
+            } );
+    
+            mesh.geometry.translate( 0.5, 0.5, 0.5 );
+            mesh.position.x = coords[0];
+            mesh.position.y = coords[1];
+            mesh.position.z = coords[2];
+            mesh.scale.set( 10, 10, 10 );
+            this.obj[uuid] = mesh;
+            console.log(uuid);
+            console.log(this.obj[uuid]);
+            this.scene.add( mesh );
+        } );
     }
 
     addCube(cube, material=this.cubeBase.material) {

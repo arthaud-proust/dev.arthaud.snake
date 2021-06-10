@@ -1,11 +1,12 @@
 const User = require('./user');
+const uuid = require('uuid');
 
 module.exports = class UserManager {
     constructor(io) {
         this.io = io;
 
         this.cubeSize = 10;
-        this.size = 500;
+        this.size = 350;
         this.cubes = [];
 
         for(let i =0; i<500; i++) {
@@ -65,8 +66,12 @@ module.exports = class UserManager {
                 && this[list][i][2] // si l'élément subit les collisions
                 ) {
                 if(item) {
-                    this[list].splice(i,1); // if don't wrk 
-                    this.io.emit('itemDespawn', this[list])
+                    let deletedItem = this[list].splice(i,1)[0]; // if don't wrk 
+                    
+                    // peut apporter un problème si un objet n'est pas supprimé, il ne le sera pas ensuite
+                    // this.io.emit('item.despawn', this[list])
+                    
+                    this.io.emit('item.despawn', deletedItem)
                 }
                 return this[list][i]
             }
@@ -112,11 +117,12 @@ module.exports = class UserManager {
             let item = [
                 this.randomX(),
                 this.randomY(),
-                'apple'
+                'apple',
+                uuid.v4()
             ]
             console.log('apple spawned');
             this._itemsMap.push(item);
-            this.io.sockets.emit('itemSpawn', item)
+            this.io.sockets.emit('item.spawn', item)
         }
     }
 

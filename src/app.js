@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from './libs/orbitControls.js';
 import World from './classes/world';
 import io from 'socket.io-client';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 
-const WORLD_SIZE=500;
+const WORLD_SIZE=350;
 
 let camera, scene, renderer, world, startTime, stats,
 
@@ -58,6 +60,69 @@ function init() {
     //     world.addCube();
     // }
 
+    
+    var OBJFile = './models/apple_obj/apple.obj';
+    var MTLFile = './models/apple_obj/apple.mtl';
+    var JPGFile = './models/apple_obj/apple_color.jpg';
+
+    // new MTLLoader()
+    // .load(MTLFile, function (materials) {
+    //     materials.preload();
+    //     new OBJLoader()
+    //         .setMaterials(materials)
+    //         .load(OBJFile, function (object) {
+    //             object.position.y = - 95;
+    //             var texture = new THREE.TextureLoader().load(JPGFile);
+
+    //             object.traverse(function (child) {   // aka setTexture
+    //                 if (child instanceof THREE.Mesh) {
+    //                     child.material.map = texture;
+    //                 }
+    //             });
+    //             scene.add(object);
+    //         });
+    // });
+
+
+
+
+    /*
+    const loader = new OBJLoader();
+
+    loader.load(
+        'assets/apple_obj/apple.obj',
+        function ( object ) {
+
+            console.log(object);
+            mesh = object.scene.children[ 0 ];
+            object.position.x = 10;
+            object.position.y = 10;
+            object.position.z = 10;
+            object.scale.x = object.scale.y = object.scale.z = 10;
+
+            mesh.material = new THREE.MeshPhongMaterial( {
+                specular: 0x111111,
+                map: textureLoader.load( './assets/apple_obj/apple_color.jpg' ),
+                specularMap: textureLoader.load( './assets/apple_obj/apple_specular_map.jpg' ),
+                normalMap: textureLoader.load( './assets/apple_obj/apple_specular_map.jpg' ),
+                shininess: 25
+            } );
+            scene.add( object );
+
+        },
+        function ( xhr ) {
+
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+        },
+        function ( error ) {
+
+            console.log( 'An error happened' );
+            console.error(error);
+
+        }
+    );
+        */
     render();
 }
 
@@ -98,6 +163,19 @@ window.userQueues = {};
 socket.emit('join');
 socket.on('map.data', mapData=>{
     world.updateWith(mapData);
+});
+
+socket.on('item.spawn', item=>{
+    world.addApple(item[3], [
+        item[0],
+        0,
+        item[1]
+    ]);
+});
+
+socket.on('item.despawn', item=>{
+    let itemUuid = item[3];
+    scene.remove(world.obj[itemUuid]);
 });
 
 window.onunload = window.onbeforeunload = () => {

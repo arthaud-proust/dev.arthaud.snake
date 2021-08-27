@@ -9,10 +9,12 @@ const router = express.Router()
 const PORT = process.env.PORT || 8000;
 const HOST = process.env.HOST || 'localhost';
 //add the router folders
+
+app.use(cors());
+
 app.use(express.static(__dirname + '/public'));             // Store all assets, js and css files in public folder.
 app.use(express.static(__dirname + '/resources/views'));    // Store all HTML files in view folder.
 
-app.use(cors());
 app.use('/', router);       // add the router
 
 //routes and ioController
